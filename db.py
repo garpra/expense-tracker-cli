@@ -1,4 +1,5 @@
 import sqlite3
+from datetime import datetime
 
 def get_connection():
   conn = sqlite3.connect("expenses.db")
@@ -26,6 +27,19 @@ def init_db():
       PRIMARY KEY (category, month)
     )
   """)
+
+  conn.commit()
+  conn.close()
+
+def add_expense(amount: float, category: str, note: str):
+  conn = get_connection()
+  cursor = conn.cursor()
+  date_now = datetime.now().strftime("%Y-%m-%d")
+
+  cursor.execute(
+    "INSERT INTO expenses (amount, category, note, date) VALUES (?, ?, ?, ?)",
+    (amount, category, note, date_now)
+  )
 
   conn.commit()
   conn.close()
