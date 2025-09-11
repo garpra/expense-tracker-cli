@@ -43,3 +43,15 @@ def add_expense(amount: float, category: str, note: str):
 
   conn.commit()
   conn.close()
+
+def get_expenses():
+  conn = get_connection()
+  cursor = conn.cursor()
+
+  cursor.execute(
+    "SELECT * FROM expenses ORDER BY date DESC"
+  )
+  rows = cursor.fetchall()
+  
+  conn.close()
+  return rows
