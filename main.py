@@ -45,7 +45,7 @@ def show():
     amount = row["amount"]
     note = row["note"] or ""
 
-    table.add_row(date, category, f"Rp {amount:,.0f}".replace(",", "."), note)
+    table.add_row(date, category, f"{amount:,.0f}".replace(",", "."), note)
 
   console.print(table)
 
