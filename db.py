@@ -55,3 +55,14 @@ def get_expenses():
   
   conn.close()
   return rows
+
+def set_budget(category, month, amount):
+  conn = get_connection()
+  cursor = conn.cursor()
+
+  cursor.execute(
+    "INSERT OR REPLACE INTO budgets (category, month, amount) VALUES (?, ?, ?)", (category, month, amount)
+  )
+
+  conn.commit()
+  conn.close()
