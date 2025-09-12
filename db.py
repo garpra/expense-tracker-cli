@@ -66,3 +66,16 @@ def set_budget(category, month, amount):
 
   conn.commit()
   conn.close()
+
+def get_budgets(month):
+  conn = get_connection()
+  cursor = conn.cursor()
+
+  cursor.execute(
+    "SELECT * FROM budgets WHERE month = ?",
+    (month,)
+  )
+  rows = cursor.fetchall()
+  
+  conn.close()
+  return rows
