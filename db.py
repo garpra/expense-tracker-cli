@@ -79,3 +79,16 @@ def get_budgets(month):
   
   conn.close()
   return rows
+
+def get_summary(month):
+  conn = get_connection()
+  cursor = conn.cursor()
+
+  cursor.execute(
+    "SELECT category, SUM(amount) as total FROM expenses WHERE date LIKE ? GROUP BY category",
+    (f"{month}%",)
+  )
+  rows = cursor.fetchall()
+  
+  conn.close()
+  return rows
