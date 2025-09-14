@@ -8,7 +8,9 @@ app = typer.Typer()
 console = Console()
 budget_app = typer.Typer()
 app.add_typer(budget_app, name="budget")
-CURRENCY = "Rp"
+
+def format_currency(amount: float) -> str:
+  return f"Rp {amount:,.0f}".replace(",", ".")
 
 @app.callback()
 def startup():
@@ -27,7 +29,7 @@ def add():
   note = typer.prompt("Note (opsional)", default="")
   
   add_expense(amount, category, note)
-  console.print(f"Added: {CURRENCY} {amount:,.0f} — {category}".replace(",", "."))
+  console.print(f"Added: {format_currency(amount)} — {category}")
 
 @app.command("list")
 def show():
@@ -49,7 +51,7 @@ def show():
     amount = row["amount"]
     note = row["note"] or ""
 
-    table.add_row(date, category, f"{CURRENCY} {amount:,.0f}".replace(",", "."), note)
+    table.add_row(date, category, format_currency(amount), note)
 
   console.print(table)
 
@@ -65,7 +67,7 @@ def budget_set():
   
   month_now = datetime.now().strftime("%Y-%m")
   set_budget(category, month_now, amount)
-  console.print(f"Added: {CURRENCY} {amount:,.0f} — {category} - {month_now}".replace(",", "."))
+  console.print(f"Added: {format_currency(amount)} — {category} - {month_now}")
 
 @budget_app.command("show")
 def budget_show():
@@ -83,7 +85,7 @@ def budget_show():
   for row in rows:
     category = row["category"]
     budget = row["amount"]
-    table.add_row(category, f"{CURRENCY} {budget:,.0f}".replace(",", "."))
+    table.add_row(category, format_currency(budget))
 
   console.print(table)
 
