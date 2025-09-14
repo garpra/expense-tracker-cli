@@ -1,5 +1,5 @@
 import typer
-from db import init_db, add_expense, get_expenses, get_budgets, set_budget
+from db import init_db, add_expense, get_expenses, get_budgets, set_budget, get_summary
 from rich.console import Console
 from rich.table import Table
 from datetime import datetime
@@ -54,6 +54,41 @@ def show():
     table.add_row(date, category, format_currency(amount), note)
 
   console.print(table)
+
+@app.command()
+def summary():
+  month_now = datetime.now().strftime("%Y-%m")
+  total_spent = 0
+  budgets = get_budgets(month_now)
+  budget_map = {row["category"]: row["amount"] for row in budgets}
+
+  rows = get_summary(month_now)
+  if(len(rows) == 0):
+    console.print("[red]No expenses this month[/red]")
+    return
+
+  table = Table()
+  table.add_column("Category")
+  table.add_column("Spent")
+  table.add_column("Budget")
+  table.add_column("Status")
+
+  for row in rows:
+    category = row["category"]
+    budget = budget_map.get(category, None)
+    spent = row["total"]
+    total_spent += spent
+
+    if budget is None:
+      table.add_row(category, format_currency(spent), "-", "-")
+    else:
+      if spent > budget:
+        table.add_row(category, format_currency(spent), format_currency(budget), "[red]⚠[/red]")
+      else:
+        table.add_row(category, format_currency(spent), format_currency(budget), "[green]✓[/green]")
+
+  console.print(table)
+  console.print(f"Total: {format_currency(total_spent)}")
 
 @budget_app.command("set")
 def budget_set():
