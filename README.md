@@ -16,7 +16,11 @@ A simple CLI tool to keep a track of your daily expenses from terminal itself. B
 - Quickly add expenses
 - Categorize transactions
 - View expense history
+- Generate summary reports
 - Persistent local storage with SQLite
+- Budget tracking per category
+  - Set spending limits
+  - Monitor budget usage
 
 ## Getting Started
 
@@ -63,6 +67,18 @@ python main.py add
 
 ```bash
 python main.py list
+```
+
+### Set Budget
+
+```bash
+python main.py budget set
+```
+
+### Show Budget
+
+```bash
+python main.py budget show
 ```
 
 ### Summary all expense
